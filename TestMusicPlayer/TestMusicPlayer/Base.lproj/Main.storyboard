@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_1" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="TestMusicPlayer" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B1E-BL-hBd">
+                                <rect key="frame" x="107" y="94" width="200" height="200"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="LQN-Q2-rww"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="200" id="gdz-lY-SR5"/>
+                                    <constraint firstAttribute="height" constant="200" id="qP3-nC-cxk"/>
+                                </constraints>
+                                <state key="normal" image="button_play"/>
+                                <state key="selected" image="button_pause"/>
+                                <connections>
+                                    <action selector="touchUpPlayPauseButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="gCy-T4-Vta"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Eit-Qp-VFb">
+                                <rect key="frame" x="169" y="314" width="76" height="21"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="AWH-AV-vzi">
+                                <rect key="frame" x="14" y="351" width="386" height="31"/>
+                                <color key="minimumTrackTintColor" red="1" green="0.62437251031388763" blue="0.45281108089569655" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <connections>
+                                    <action selector="sliderValueChanged:" destination="BYZ-38-t0r" eventType="valueChanged" id="CxH-hl-uyw"/>
+                                </connections>
+                            </slider>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="AWH-AV-vzi" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="5ac-08-I3j"/>
+                            <constraint firstItem="AWH-AV-vzi" firstAttribute="top" secondItem="Eit-Qp-VFb" secondAttribute="bottom" constant="16" id="8bs-kQ-axy"/>
+                            <constraint firstItem="Eit-Qp-VFb" firstAttribute="top" secondItem="B1E-BL-hBd" secondAttribute="bottom" constant="20" id="BXa-jw-TdY"/>
+                            <constraint firstItem="Eit-Qp-VFb" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="FTL-mW-eVi"/>
+                            <constraint firstItem="B1E-BL-hBd" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="50" id="JYG-Xh-ivd"/>
+                            <constraint firstItem="B1E-BL-hBd" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Vcc-L2-eOd"/>
+                            <constraint firstItem="B1E-BL-hBd" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="czP-1v-tfC"/>
+                            <constraint firstItem="AWH-AV-vzi" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="hL4-4V-Oue"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="AWH-AV-vzi" secondAttribute="trailing" constant="16" id="v7g-Aa-kgn"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                    <connections>
+                        <outlet property="playPauseButton" destination="B1E-BL-hBd" id="Dcd-jS-iaK"/>
+                        <outlet property="progressSlider" destination="AWH-AV-vzi" id="oMt-AM-uFO"/>
+                        <outlet property="timeLabel" destination="Eit-Qp-VFb" id="p73-CZ-CZp"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="137.68115942028987" y="105.80357142857143"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="button_pause" width="185" height="185"/>
+        <image name="button_play" width="187" height="189"/>
+    </resources>
+</document>
