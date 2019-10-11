@@ -12,13 +12,16 @@ struct Concentration {
     
     private(set) var cards = [Card]()
     
+    var flipCount = 0
+    
+    var gameScore = 0
+    
     init(numberOfPairOfCards: Int) {
         assert(numberOfPairOfCards > 0, "Concentration.init(\(numberOfPairOfCards)): you must have at least one pair of cards")
         for _ in 0..<numberOfPairOfCards {
             let card = Card()
             cards += [card, card]
         }
-        
         cards.shuffle()
     }
     
@@ -40,12 +43,19 @@ struct Concentration {
                 if cards[matchIndex] == cards[index] {
                     cards[matchIndex].isMatched = true
                     cards[index].isMatched = true
+                    gameScore += 2
+                } else {
+                    if cards[index].isFaceUpMoreThanOnce {
+                        gameScore -= 1
+                    }
                 }
                 cards[index].isFaceUp = true
+                cards[index].isFaceUpMoreThanOnce = true
             } else {
                 indexOfOneAndOnlyFaceUpCard = index
             }
         }
+        flipCount += 1
     }
 }
 

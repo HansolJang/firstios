@@ -16,37 +16,30 @@ class ViewController: UIViewController {
         return (cardButtons.count + 1) / 2
     }
     
-    private(set) var flipCount = 0 {
-        didSet {
-            updateFlipCountLabel()
-        }
-    }
-    
-    private func updateFlipCountLabel() {
-        let attributes: [NSAttributedString.Key: Any] = [
-            .strokeWidth : 5.0,
-            .strokeColor : #colorLiteral(red: 1, green: 0.6015612483, blue: 0.4140183032, alpha: 1)
-        ]
-        let attributedString = NSAttributedString(string: "Flips: \(flipCount)", attributes: attributes)
-        flipCountLabel.attributedText = attributedString
-    }
-    
     @IBOutlet private weak var flipCountLabel: UILabel! {
-        didSet {
-            updateFlipCountLabel()
-        }
+        didSet { updateFlipCountLabel() }
+    }
+    
+    @IBOutlet private weak var gameScoreLabel: UILabel! {
+        didSet { updateGameScoreLabel() }
     }
     
     @IBOutlet private var cardButtons: [UIButton]!
     
     @IBAction private func touchCard(_ sender: UIButton) {
-        flipCount += 1
         if let cardNumber = cardButtons.firstIndex(of: sender) {
             game.chooseCard(at: cardNumber)
             updateViewFromModel()
         } else {
             print("chosen card was not in cardButton")
         }
+    }
+    
+    @IBAction private func touchNewGame(_ sender: UIButton) {
+        game = Concentration(numberOfPairOfCards: numberOfPairsOfCards)
+        emojiChoices = Theme.getRandomTheme().rawValue
+        emoji.removeAll()
+        updateViewFromModel()
     }
     
     private func updateViewFromModel() {
@@ -61,9 +54,29 @@ class ViewController: UIViewController {
                 button.backgroundColor = card.isMatched ? #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0) : #colorLiteral(red: 1, green: 0.6015612483, blue: 0.4140183032, alpha: 1)
             }
         }
+        updateFlipCountLabel()
+        updateGameScoreLabel()
     }
     
-    private var emojiChoices = "🎃👻😱🍭🍬🦇🍎😈"
+    private func updateFlipCountLabel() {
+        let attributes: [NSAttributedString.Key : Any] = [
+            .strokeWidth : 5.0,
+            .strokeColor : #colorLiteral(red: 1, green: 0.6015612483, blue: 0.4140183032, alpha: 1)
+        ]
+        let attributedString = NSAttributedString(string: "Flips: \(game.flipCount)", attributes: attributes)
+        flipCountLabel.attributedText = attributedString
+    }
+    
+    private func updateGameScoreLabel() {
+        let attributes: [NSAttributedString.Key : Any] = [
+            .strokeWidth: 5.0,
+            .strokeColor: UIColor.white
+        ]
+        let attributeString = NSAttributedString(string: "Game Score: \(game.gameScore)", attributes: attributes)
+        gameScoreLabel.attributedText = attributeString
+    }
+    
+    private lazy var emojiChoices = Theme.getRandomTheme().rawValue
     
     private var emoji = [Card:String]()
     
@@ -85,6 +98,5 @@ extension Int {
         } else {
             return 0
         }
-
     }
 }
