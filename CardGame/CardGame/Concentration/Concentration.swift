@@ -48,9 +48,13 @@ struct Concentration {
                     if cards[index].isFaceUpMoreThanOnce {
                         gameScore -= 1
                     }
+                    if cards[matchIndex].isFaceUpMoreThanOnce {
+                        gameScore -= 1
+                    }
                 }
                 cards[index].isFaceUp = true
                 cards[index].isFaceUpMoreThanOnce = true
+                cards[matchIndex].isFaceUpMoreThanOnce = true
             } else {
                 indexOfOneAndOnlyFaceUpCard = index
             }

@@ -10,11 +10,7 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    private lazy var game = Concentration(numberOfPairOfCards: numberOfPairsOfCards)
-    
-    var numberOfPairsOfCards: Int {
-        return (cardButtons.count + 1) / 2
-    }
+    private var game: Concentration? = nil
     
     @IBOutlet private weak var flipCountLabel: UILabel! {
         didSet { updateFlipCountLabel() }
@@ -26,9 +22,17 @@ class ViewController: UIViewController {
     
     @IBOutlet private var cardButtons: [UIButton]!
     
+    var numberOfPairsOfCards: Int {
+        return (cardButtons.count + 1) / 2
+    }
+    
+    override func viewDidLoad() {
+        startNewGame()
+    }
+    
     @IBAction private func touchCard(_ sender: UIButton) {
         if let cardNumber = cardButtons.firstIndex(of: sender) {
-            game.chooseCard(at: cardNumber)
+            game?.chooseCard(at: cardNumber)
             updateViewFromModel()
         } else {
             print("chosen card was not in cardButton")
@@ -36,8 +40,14 @@ class ViewController: UIViewController {
     }
     
     @IBAction private func touchNewGame(_ sender: UIButton) {
+        startNewGame()
+    }
+    
+    private func startNewGame() {
         game = Concentration(numberOfPairOfCards: numberOfPairsOfCards)
-        emojiChoices = Theme.getRandomTheme().rawValue
+        let theme = Theme.getRandomTheme()
+        view.backgroundColor = theme.backgroundColor
+        emojiChoices = theme.rawValue
         emoji.removeAll()
         updateViewFromModel()
     }
@@ -45,13 +55,13 @@ class ViewController: UIViewController {
     private func updateViewFromModel() {
         for index in cardButtons.indices {
             let button = cardButtons[index]
-            let card = game.cards[index]
-            if card.isFaceUp {
+            let card = game?.cards[index]
+            if let card = card, card.isFaceUp {
                 button.setTitle(emoji(for: card), for: UIControl.State.normal)
                 button.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
             } else {
                 button.setTitle("", for: UIControl.State.normal)
-                button.backgroundColor = card.isMatched ? #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0) : #colorLiteral(red: 1, green: 0.6015612483, blue: 0.4140183032, alpha: 1)
+                button.backgroundColor = card?.isMatched == true ? #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0) : #colorLiteral(red: 1, green: 0.6015612483, blue: 0.4140183032, alpha: 1)
             }
         }
         updateFlipCountLabel()
@@ -63,7 +73,7 @@ class ViewController: UIViewController {
             .strokeWidth : 5.0,
             .strokeColor : #colorLiteral(red: 1, green: 0.6015612483, blue: 0.4140183032, alpha: 1)
         ]
-        let attributedString = NSAttributedString(string: "Flips: \(game.flipCount)", attributes: attributes)
+        let attributedString = NSAttributedString(string: "Flips: \(game?.flipCount ?? 0)", attributes: attributes)
         flipCountLabel.attributedText = attributedString
     }
     
@@ -72,7 +82,7 @@ class ViewController: UIViewController {
             .strokeWidth: 5.0,
             .strokeColor: UIColor.white
         ]
-        let attributeString = NSAttributedString(string: "Game Score: \(game.gameScore)", attributes: attributes)
+        let attributeString = NSAttributedString(string: "Game Score: \(game?.gameScore ?? 0)", attributes: attributes)
         gameScoreLabel.attributedText = attributeString
     }
     
