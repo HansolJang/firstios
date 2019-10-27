@@ -8,9 +8,21 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+
+class ConcentationViewController: UIViewController {
     
     private var game: Concentration? = nil
+    
+    var theme: Theme? = nil {
+        didSet {
+            if let theme = theme {
+                view.backgroundColor = theme.backgroundColor
+                emojiChoices = theme.emojiChoices
+                emoji = [:]
+                updateViewFromModel()
+            }
+        }
+    }
     
     @IBOutlet private weak var flipCountLabel: UILabel! {
         didSet { updateFlipCountLabel() }
@@ -45,14 +57,13 @@ class ViewController: UIViewController {
     
     private func startNewGame() {
         game = Concentration(numberOfPairOfCards: numberOfPairsOfCards)
-        let theme = Theme.getRandomTheme()
-        view.backgroundColor = theme.backgroundColor
-        emojiChoices = theme.rawValue
-        emoji.removeAll()
         updateViewFromModel()
     }
     
     private func updateViewFromModel() {
+        if cardButtons == nil {
+            return
+        }
         for index in cardButtons.indices {
             let button = cardButtons[index]
             let card = game?.cards[index]
@@ -61,7 +72,7 @@ class ViewController: UIViewController {
                 button.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
             } else {
                 button.setTitle("", for: UIControl.State.normal)
-                button.backgroundColor = card?.isMatched == true ? #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0) : #colorLiteral(red: 1, green: 0.6015612483, blue: 0.4140183032, alpha: 1)
+                button.backgroundColor = card?.isMatched == true ? #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0) : #colorLiteral(red: 0.2196078449, green: 0.007843137719, blue: 0.8549019694, alpha: 1)
             }
         }
         updateFlipCountLabel()
@@ -71,7 +82,7 @@ class ViewController: UIViewController {
     private func updateFlipCountLabel() {
         let attributes: [NSAttributedString.Key : Any] = [
             .strokeWidth : 5.0,
-            .strokeColor : #colorLiteral(red: 1, green: 0.6015612483, blue: 0.4140183032, alpha: 1)
+            .strokeColor : #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         ]
         let attributedString = NSAttributedString(string: "Flips: \(game?.flipCount ?? 0)", attributes: attributes)
         flipCountLabel.attributedText = attributedString

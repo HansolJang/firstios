@@ -10,12 +10,12 @@ import Foundation
 import UIKit
 
 enum Theme: String {
-    case halloween      = "🎃👻😱🍭🍬🦇🍎😈🧟‍♀️👺☠️⚰️🥶🤡🙀🧛🏽‍♀️👽"
-    case animals        = "🐶🐬🦄🐥🐢🐼🐨🐯🦁🐮🦊🐵🦉🐠🦞🦜🕊"
-    case faces          = "😇🥰🥵😱🤢👿🤯🤮🤪😎🧐🥳😭😴🤠😑☺️"
-    case foods          = "🍔🌭🥗🥓🥑🍒🍎🌽🥒🍙🍻🍩🥘🍕🍌🍣🍦"
-    case sports         = "⚽️🏀⚾️🎾🥏🎱🏓🏸🏒🥌🛹🏊‍♀️🚴‍♀️🧘‍♂️🤺🎿🥊"
-    case nature         = "🌱🍂🌷🌸🌞🌛🌿🔥💨☔️🌊❄️🌻💐🌹🌾🌲"
+    case halloween      = "Halloween"
+    case animals        = "Animals"
+    case faces          = "Faces"
+    case foods          = "Foods"
+    case sports         = "Sports"
+    case nature         = "Nature"
     
     var backgroundColor: UIColor {
         switch self {
@@ -25,6 +25,17 @@ enum Theme: String {
         case .foods: return UIColor.red
         case .sports: return UIColor.brown
         case .nature: return UIColor.yellow
+        }
+    }
+    
+    var emojiChoices: String {
+        switch self {
+        case .halloween: return "🎃👻😱🍭🍬🦇🍎😈🧟‍♀️👺☠️⚰️🥶🤡🙀🧛🏽‍♀️👽"
+        case .animals: return "🐶🐬🦄🐥🐢🐼🐨🐯🦁🐮🦊🐵🦉🐠🦞🦜🕊"
+        case .faces: return "😇🥰🥵😱🤢👿🤯🤮🤪😎🧐🥳😭😴🤠😑☺️"
+        case .foods: return "🍔🌭🥗🥓🥑🍒🍎🌽🥒🍙🍻🍩🥘🍕🍌🍣🍦"
+        case .sports: return "⚽️🏀⚾️🎾🥏🎱🏓🏸🏒🥌🛹🏊‍♀️🚴‍♀️🧘‍♂️🤺🎿🥊"
+        case .nature: return "🌱🍂🌷🌸🌞🌛🌿🔥💨☔️🌊❄️🌻💐🌹🌾🌲"
         }
     }
     
