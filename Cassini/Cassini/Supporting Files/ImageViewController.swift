@@ -25,11 +25,13 @@ class ImageViewController: UIViewController, UIScrollViewDelegate {
             return imageView.image
         }
         set {
+            // 무조건 main 에서 일어나야 하는 일
             imageView.image = newValue
             // set intrinsic size
             imageView.sizeToFit()
             // set scrollview's contentsize to scroll
-            scrollView.contentSize = imageView.frame.size
+            scrollView?.contentSize = imageView.frame.size
+            spinner?.stopAnimating()
         }
     }
     
@@ -40,7 +42,8 @@ class ImageViewController: UIViewController, UIScrollViewDelegate {
             fetchImage()
         }
     }
-
+    @IBOutlet weak var spinner: UIActivityIndicatorView!
+    
     @IBOutlet weak var scrollView: UIScrollView! {
         didSet {
             scrollView.minimumZoomScale = 1/25
@@ -60,8 +63,17 @@ class ImageViewController: UIViewController, UIScrollViewDelegate {
 
     private func fetchImage() {
         if let url = imageURL {
-            if let urlContents = try? Data(contentsOf: url) {
-                image = UIImage(data: urlContents)
+            spinner.startAnimating()
+            // 사용자가 이미지를 바꿔서 일어나는 일이기 때문에 userInitiated 사용
+            // 뷰컨트롤러가 사라지고 나서도 클로저의 self 때문에 힙에 남아있을 수 있으므로 weak 사용
+            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                let urlContents = try? Data(contentsOf: url)
+                DispatchQueue.main.async {
+                    // 중간에 다른 이미지를 또 요청했을 수도 있으므로 요청과 결과가 같은 url 인지 검사
+                    if let imageData = urlContents, url == self?.imageURL {
+                        self?.image = UIImage(data: imageData)
+                    }
+                }
             }
         }
     }

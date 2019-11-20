@@ -12,6 +12,8 @@
 		4317374423781D9300ADE2E4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4317374323781D9300ADE2E4 /* Assets.xcassets */; };
 		4317374723781D9300ADE2E4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4317374523781D9300ADE2E4 /* LaunchScreen.storyboard */; };
 		4317375123781E7D00ADE2E4 /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4317375023781E7D00ADE2E4 /* ImageViewController.swift */; };
+		4364A9A42384392E0082AD5F /* CassiniViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4364A9A32384392E0082AD5F /* CassiniViewController.swift */; };
+		4364A9A623843C060082AD5F /* DemoURLs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4364A9A523843C060082AD5F /* DemoURLs.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +24,8 @@
 		4317374623781D9300ADE2E4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4317374823781D9300ADE2E4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4317375023781E7D00ADE2E4 /* ImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
+		4364A9A32384392E0082AD5F /* CassiniViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CassiniViewController.swift; sourceTree = "<group>"; };
+		4364A9A523843C060082AD5F /* DemoURLs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoURLs.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,8 +59,10 @@
 			isa = PBXGroup;
 			children = (
 				4317374023781D8E00ADE2E4 /* Main.storyboard */,
+				4364A9A32384392E0082AD5F /* CassiniViewController.swift */,
 				4317374F23781DE100ADE2E4 /* Supporting Files */,
 				4317374823781D9300ADE2E4 /* Info.plist */,
+				4364A9A523843C060082AD5F /* DemoURLs.swift */,
 			);
 			path = Cassini;
 			sourceTree = "<group>";
@@ -143,7 +149,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4364A9A623843C060082AD5F /* DemoURLs.swift in Sources */,
 				4317375123781E7D00ADE2E4 /* ImageViewController.swift in Sources */,
+				4364A9A42384392E0082AD5F /* CassiniViewController.swift in Sources */,
 				4317373D23781D8E00ADE2E4 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
