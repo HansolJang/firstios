@@ -38,6 +38,17 @@ class EmojiArtDocumentTableViewController: UITableViewController {
         tableView.reloadData()
     }
     
+    // ipad landscape 에서도 마스터뷰가 슬라이드되어 보였다 사라질 수 있도록 설정을 바꾼다.
+    // 무한루프 돌지 않도록 주의
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        
+        if splitViewController?.preferredDisplayMode != .primaryOverlay {
+            splitViewController?.preferredDisplayMode = .primaryOverlay
+        }
+        
+    }
+    
     
     /*
     // 행을 수정(삭제)하면 안될 때 사용하는 함수 (디폴트는 삭제 가능 true)
