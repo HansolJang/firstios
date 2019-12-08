@@ -104,7 +104,6 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFl
         return cell
     }
     
-    
     // collection view's drag delegate
     func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
         // 다시 드래그할 경우 복사가 아니라 이동하기 위해 저장
@@ -140,15 +139,35 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFl
     }
     
     // collection view's drop
-    // 47:24
     func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
         let destinationIndexPath = coordinator.destinationIndexPath ?? IndexPath(item: 0, section: 0)
         for item in coordinator.items {
             if let sourceIndexPath = item.sourceIndexPath {
                 if let attributedString = item.dragItem.localObject as? NSAttributedString {
-                    emojis.remove(at: sourceIndexPath.item)
-                    emojis.insert(attributedString, at: destinationIndexPath.item)
-                    
+                    // 여러개를 수정할 때는 한번에 배치를 돌리도록
+                    // 컬렉션뷰에서의 삭제/추가
+                    collectionView.performBatchUpdates({
+                        emojis.remove(at: sourceIndexPath.item)
+                        emojis.insert(attributedString.string, at: destinationIndexPath.item)
+                        collectionView.deleteItems(at: [sourceIndexPath])
+                        collectionView.insertItems(at: [destinationIndexPath])
+                    })
+                    // 드롭이 된 곳에 추가하기
+                    coordinator.drop(item.dragItem, toItemAt: destinationIndexPath)
+                }
+            } else {
+                // 외부에서 드롭한 텍스트 아이템 비동기로 추가하기
+                let placeholderContext = coordinator.drop(item.dragItem, to: UICollectionViewDropPlaceholder(insertionIndexPath: destinationIndexPath, reuseIdentifier: "DropPlaceholderCell"))
+                item.dragItem.itemProvider.loadObject(ofClass: NSAttributedString.self) { (provider, error) in
+                    DispatchQueue.main.async {
+                        if let attributedString = provider as? NSAttributedString {
+                            placeholderContext.commitInsertion(dataSourceUpdates: { insertionIndexPath in
+                                self.emojis.insert(attributedString.string, at: insertionIndexPath.item)
+                            })
+                        } else {
+                            placeholderContext.deletePlaceholder()
+                        }
+                    }
                 }
             }
         }
