@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		430EA469238EA3780043917D /* EmojiArtDocumentTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 430EA468238EA3780043917D /* EmojiArtDocumentTableViewController.swift */; };
+		435245F3239E8D45007093EE /* TextFieldCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 435245F2239E8D45007093EE /* TextFieldCollectionViewCell.swift */; };
 		43831632238AE98C0055E923 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43831631238AE98C0055E923 /* AppDelegate.swift */; };
 		43831637238AE98C0055E923 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 43831635238AE98C0055E923 /* Main.storyboard */; };
 		43831639238AE98F0055E923 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 43831638238AE98F0055E923 /* Assets.xcassets */; };
@@ -20,6 +21,7 @@
 
 /* Begin PBXFileReference section */
 		430EA468238EA3780043917D /* EmojiArtDocumentTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = EmojiArtDocumentTableViewController.swift; path = EmojiArt/EmojiArtDocumentTableViewController.swift; sourceTree = "<group>"; };
+		435245F2239E8D45007093EE /* TextFieldCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TextFieldCollectionViewCell.swift; path = EmojiArt/TextFieldCollectionViewCell.swift; sourceTree = "<group>"; };
 		4383162E238AE98C0055E923 /* EmojiArt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EmojiArt.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		43831631238AE98C0055E923 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		43831636238AE98C0055E923 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -46,6 +48,7 @@
 		43831625238AE98C0055E923 = {
 			isa = PBXGroup;
 			children = (
+				435245F2239E8D45007093EE /* TextFieldCollectionViewCell.swift */,
 				43831648238C36200055E923 /* Utilities.swift */,
 				43831646238C315F0055E923 /* EmojiArtView.swift */,
 				43831644238C31080055E923 /* EmojiArtViewController.swift */,
@@ -156,6 +159,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				43831632238AE98C0055E923 /* AppDelegate.swift in Sources */,
+				435245F3239E8D45007093EE /* TextFieldCollectionViewCell.swift in Sources */,
 				438B03BB2395625F0041EC71 /* EmojiCollectionViewCell.swift in Sources */,
 				43831645238C31080055E923 /* EmojiArtViewController.swift in Sources */,
 				43831649238C36210055E923 /* Utilities.swift in Sources */,
