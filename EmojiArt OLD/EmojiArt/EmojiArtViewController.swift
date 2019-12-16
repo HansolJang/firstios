@@ -8,8 +8,92 @@
 
 import UIKit
 
+// UILabel -> EmojiArt.EmojiInfo
+// 뷰 -> 모델이기 때문에 뷰컨트롤러에 위치
+extension EmojiArt.EmojiInfo {
+    // ?: 실패할 수 있는 생성자
+    init?(label: UILabel) {
+        if let attributedText = label.attributedText, let font = attributedText.font {
+            x = Int(label.center.x)
+            y = Int(label.center.y)
+            text = attributedText.string
+            size = Int(font.pointSize)
+        } else {
+            return nil
+        }
+    }
+}
+
 class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScrollViewDelegate,
 UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDragDelegate, UICollectionViewDropDelegate {
+    
+    // MARK: - Model
+    
+    var emojiArt: EmojiArt? {
+        get {
+            if let url = emojiArtBackgroundImage.url {
+                let emojis = emojiArtView.subviews
+                    .compactMap { $0 as? UILabel }
+                    .compactMap { EmojiArt.EmojiInfo(label: $0) }
+                return EmojiArt(url: url, emojis: emojis)
+            }
+            return nil
+        }
+        set {
+            emojiArtBackgroundImage = (nil, nil)
+            emojiArtView.subviews
+                .compactMap { $0 as? UILabel }
+                .forEach { $0.removeFromSuperview() }
+            if let url = newValue?.url {
+                imageFetcher = ImageFetcher(fetch: url) { (url, image) in
+                    DispatchQueue.main.async {
+                        self.emojiArtBackgroundImage = (url, image)
+                        newValue?.emojis.forEach {
+                            let attributedText = $0.text.attributedString(withTextStyle: .body, ofSize: CGFloat($0.size))
+                            self.emojiArtView.addLabel(with: attributedText, centeredAt: CGPoint(x: $0.x, y: $0.y))
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    // MARK: - Storyboard
+    
+    @IBAction func save(_ sender: UIBarButtonItem) {
+        if let json = emojiArt?.json {
+            // 내 앱의 도큐먼트 url 가져오기
+            if let url = try? FileManager.default.url(
+                for: .documentDirectory,
+                in: .userDomainMask,
+                appropriateFor: nil,
+                create: true)
+                .appendingPathComponent("Untitled.json") {
+                do {
+                    try json.write(to: url)
+                    print("saved successfully!")
+                } catch let error {
+                    print("couldn't save \(error)")
+                }
+            }
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let url = try? FileManager.default.url(
+            for: .documentDirectory,
+            in: .userDomainMask,
+            appropriateFor: nil,
+            create: true)
+            .appendingPathComponent("Untitled.json") {
+            
+            if let jsonData = try? Data(contentsOf: url) {
+                emojiArt = EmojiArt(json: jsonData)
+            }
+        }
+    }
     
     @IBOutlet weak var dropZone: UIView! {
         didSet {
@@ -56,14 +140,18 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFl
         return emojiArtView
     }
     
-    var emojiArtBackgroundImage: UIImage? {
+    // backing field
+    private var _emojiArtBackgroundImageURL: URL?
+    
+    var emojiArtBackgroundImage: (url: URL?, image: UIImage?) {
         get {
-            return emojiArtView.backgroundImage
+            return (_emojiArtBackgroundImageURL, emojiArtView.backgroundImage)
         }
         set {
+            _emojiArtBackgroundImageURL = newValue.url
             scrollView?.zoomScale = 1.0
-            emojiArtView.backgroundImage = newValue
-            let size = newValue?.size ?? CGSize.zero
+            emojiArtView.backgroundImage = newValue.image
+            let size = newValue.image?.size ?? CGSize.zero
             emojiArtView.frame = CGRect(origin: CGPoint.zero, size: size)
             scrollView?.contentSize = size
             scrollViewWidth?.constant = size.width
@@ -240,7 +328,7 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFl
     func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
         imageFetcher = ImageFetcher() { (url, image) in
             DispatchQueue.main.async {
-                self.emojiArtBackgroundImage = image
+                self.emojiArtBackgroundImage = (url, image)
             }
         }
         
