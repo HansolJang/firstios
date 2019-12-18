@@ -58,29 +58,43 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFl
         }
     }
     
-    // MARK: - Storyboard
     
-    @IBAction func save(_ sender: UIBarButtonItem) {
-        if let json = emojiArt?.json {
-            // 내 앱의 도큐먼트 url 가져오기
-            if let url = try? FileManager.default.url(
-                for: .documentDirectory,
-                in: .userDomainMask,
-                appropriateFor: nil,
-                create: true)
-                .appendingPathComponent("Untitled.json") {
-                do {
-                    try json.write(to: url)
-                    print("saved successfully!")
-                } catch let error {
-                    print("couldn't save \(error)")
-                }
-            }
+    // MARK: - UIDocument
+    
+    var document: EmojiArtDocument?
+    
+    // 변화를 감지하면 자동 저장해야 하지만 강의에서 시간이 없으므로 생략
+    // drop event 등 뷰가 변하는 delegate에 updateChangeCount 호출해야 함
+    @IBAction func save(_ sender: UIBarButtonItem? = nil) {
+        document?.emojiArt = emojiArt
+        if document?.emojiArt != nil {
+            document?.updateChangeCount(.done)
+        }
+    }
+    
+    @IBAction func close(_ sender: UIBarButtonItem) {
+        save()
+        if document?.emojiArt != nil {
+            document?.thumbnail = emojiArtView.snapshot
+        }
+        dismiss(animated: true) {
+            self.document?.close()
         }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        document?.open { success in
+            if success {
+                self.title = self.document?.localizedName
+                self.emojiArt = self.document?.emojiArt
+            }
+        }
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
         if let url = try? FileManager.default.url(
             for: .documentDirectory,
@@ -88,12 +102,11 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFl
             appropriateFor: nil,
             create: true)
             .appendingPathComponent("Untitled.json") {
-            
-            if let jsonData = try? Data(contentsOf: url) {
-                emojiArt = EmojiArt(json: jsonData)
-            }
+            document = EmojiArtDocument(fileURL: url)
         }
     }
+    
+    // MARK: - Storyboard
     
     @IBOutlet weak var dropZone: UIView! {
         didSet {
@@ -170,6 +183,8 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFl
             emojiCollectionView.delegate = self
             emojiCollectionView.dragDelegate = self
             emojiCollectionView.dropDelegate = self
+            // iphone's default = false
+            emojiCollectionView.dragInteractionEnabled = true
         }
     }
     
