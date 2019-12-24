@@ -8,6 +8,10 @@
 
 import UIKit
 
+extension EmojiArtView {
+    static let didChangeNotification = Notification.Name("EmojiArtViewDidChange")
+}
+
 class EmojiArtView: UIView, UIDropInteractionDelegate {
     
     override init(frame: CGRect) {
@@ -38,6 +42,7 @@ class EmojiArtView: UIView, UIDropInteractionDelegate {
             let dropPoint = session.location(in: self)
             for attributedString in providers as? [NSAttributedString] ?? [] {
                 self.addLabel(with: attributedString, centeredAt: dropPoint)
+                NotificationCenter.default.post(name: EmojiArtView.didChangeNotification, object: self)
             }
         }
     }

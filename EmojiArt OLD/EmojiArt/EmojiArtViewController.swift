@@ -70,22 +70,53 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFl
     }
     
     @IBAction func close(_ sender: UIBarButtonItem) {
-        save()
+        
+        // 이모지뷰 변경 옵저버 삭제
+        if let observer = emojiArtViewObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+        
         if document?.emojiArt != nil {
             document?.thumbnail = emojiArtView.snapshot
         }
         dismiss(animated: true) {
-            self.document?.close()
+            self.document?.close { success in
+                // 문서 상태 옵저버 삭제
+                if let observer = self.documentObserver {
+                    NotificationCenter.default.removeObserver(observer)
+                }
+            }
         }
     }
     
+    private var documentObserver: NSObjectProtocol?
+    private var emojiArtViewObserver: NSObjectProtocol?
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        // 문서 상태 옵저버 추가
+        documentObserver = NotificationCenter.default.addObserver(
+            forName: UIDocument.stateChangedNotification,
+            object: document,
+            queue: OperationQueue.main,
+            using: { notification in
+                print("documentState changed to \(self.document!.documentState)")
+        })
         
         document?.open { success in
             if success {
                 self.title = self.document?.localizedName
                 self.emojiArt = self.document?.emojiArt
+                // 이모지뷰 변경 옵저버 추가
+                self.emojiArtViewObserver = NotificationCenter.default.addObserver(
+                    forName: EmojiArtView.didChangeNotification,
+                    object: self.emojiArtView,
+                    queue: OperationQueue.main,
+                    using: { notification in
+                        self.documentChanged()
+                })
+                
             }
         }
     }
