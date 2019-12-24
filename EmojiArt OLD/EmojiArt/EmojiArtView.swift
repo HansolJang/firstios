@@ -47,6 +47,8 @@ class EmojiArtView: UIView, UIDropInteractionDelegate {
         }
     }
     
+    // kvo instance 를 사용할 동안만 힙에 저장
+    private var labelObservations = [UIView:NSKeyValueObservation]()
     func addLabel(with attributedString: NSAttributedString, centeredAt point: CGPoint) {
         let label = UILabel()
         label.backgroundColor = .clear
@@ -55,6 +57,19 @@ class EmojiArtView: UIView, UIDropInteractionDelegate {
         label.center = point
         // 이동, 줌은 Guesture 등록으로, 첨부된 코드 참조
         addSubview(label)
+        // KVO
+        // center 값이 변할 때마다 호출 (리사이즈)
+        labelObservations[label] = label.observe(\.center) { (label, change) in
+            NotificationCenter.default.post(name: EmojiArtView.didChangeNotification, object: self)
+        }
+    }
+    
+    // 해당 label 이 사라질 때 옵저버를 힙에서 삭제 -> remove observer
+    override func willRemoveSubview(_ subview: UIView) {
+        super.willRemoveSubview(subview)
+        if labelObservations[subview] != nil {
+            labelObservations[subview] = nil
+        }
     }
     
     var backgroundImage: UIImage? { didSet { setNeedsDisplay() } }
