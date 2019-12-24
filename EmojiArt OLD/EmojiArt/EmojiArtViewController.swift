@@ -66,10 +66,7 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFl
     // 변화를 감지하면 자동 저장해야 하지만 강의에서 시간이 없으므로 생략
     // drop event 등 뷰가 변하는 delegate에 updateChangeCount 호출해야 함
     @IBAction func save(_ sender: UIBarButtonItem? = nil) {
-        document?.emojiArt = emojiArt
-        if document?.emojiArt != nil {
-            document?.updateChangeCount(.done)
-        }
+        documentChanged()
     }
     
     @IBAction func close(_ sender: UIBarButtonItem) {
@@ -106,7 +103,41 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFl
         }
     }
     
+    private func documentChanged() {
+        document?.emojiArt = emojiArt
+        if document?.emojiArt != nil {
+            document?.updateChangeCount(.done)
+        }
+    }
+    
     // MARK: - Storyboard
+    
+    // 15.
+    private var suppressBadURLWarning = false
+    
+    private func presentBadURLWarning(for url: URL?) {
+        
+        if !suppressBadURLWarning {
+            let alert =  UIAlertController(
+                title: "Image Transfer Failed",
+                message: "Couldn't transfer the dropped image from its source.\nShow this warning in the future?",
+                preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(
+                title: "Keep Warning",
+                style: .default))
+            
+            alert.addAction(UIAlertAction(
+                title: "Stop Warning",
+                style: .destructive,
+                handler: { action in
+                    self.suppressBadURLWarning = true
+                }
+            ))
+            
+            present(alert, animated: true)
+        }
+    }
     
     @IBOutlet weak var dropZone: UIView! {
         didSet {
@@ -340,6 +371,7 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFl
     
     // UIDropInteractionDelegate
     // OK한 드롭에 대해 드래그에서 session을 받아 데이터 꺼내기
+    // 15.
     func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
         imageFetcher = ImageFetcher() { (url, image) in
             DispatchQueue.main.async {
@@ -349,7 +381,17 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFl
         
         session.loadObjects(ofClass: NSURL.self) { nsurls in
             if let url = nsurls.first as? URL {
-                self.imageFetcher.fetch(url)
+//                self.imageFetcher.fetch(url)
+                DispatchQueue.global(qos: .userInitiated).async {
+                    if let imageData = try? Data(contentsOf: url.imageURL), let image = UIImage(data: imageData) {
+                        DispatchQueue.main.async {
+                            self.emojiArtBackgroundImage = (url, image)
+                            self.documentChanged()
+                        }
+                    } else {
+                        self.presentBadURLWarning(for: url)
+                    }
+                }
             }
         }
         session.loadObjects(ofClass: UIImage.self) { images in
