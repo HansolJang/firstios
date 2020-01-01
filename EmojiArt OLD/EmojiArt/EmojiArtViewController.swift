@@ -39,8 +39,12 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFl
                     ppc.delegate = self
                 }
             }
+        } else if segue.identifier == "Embed Document Info" {
+            embeddedDocInfo = segue.destination.contents as? DocumentInfoViewController
         }
     }
+    
+    private var embeddedDocInfo: DocumentInfoViewController?
     
     func adaptivePresentationStyle(
         for controller: UIPresentationController,
@@ -49,6 +53,12 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFl
         return .none
     }
     
+    @IBAction func close(bySegue: UIStoryboardSegue) {
+        close()
+    }
+    
+    @IBOutlet weak var embeddedDocInfoWidth: NSLayoutConstraint!
+    @IBOutlet weak var embeddedDocInfoHeight: NSLayoutConstraint!
     
     // MARK: - Model
     
@@ -92,7 +102,7 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFl
         documentChanged()
     }
     
-    @IBAction func close(_ sender: UIBarButtonItem) {
+    @IBAction func close(_ sender: UIBarButtonItem? = nil) {
         
         // 이모지뷰 변경 옵저버 삭제
         if let observer = emojiArtViewObserver {
@@ -125,6 +135,12 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFl
             queue: OperationQueue.main,
             using: { notification in
                 print("documentState changed to \(self.document!.documentState)")
+                // Embed 세그웨이에 모델 세팅
+                if self.document!.documentState == .normal, let docInfoVC = self.embeddedDocInfo {
+                    docInfoVC.document = self.document
+                    self.embeddedDocInfoWidth.constant = docInfoVC.preferredContentSize.width
+                    self.embeddedDocInfoHeight.constant = docInfoVC.preferredContentSize.height
+                }
         })
         
         document?.open { success in
