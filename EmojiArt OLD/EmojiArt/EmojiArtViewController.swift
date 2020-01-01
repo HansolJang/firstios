@@ -27,6 +27,18 @@ extension EmojiArt.EmojiInfo {
 class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScrollViewDelegate,
 UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDragDelegate, UICollectionViewDropDelegate {
     
+    // MARK: - Navigation
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "Show Document Info" {
+            if let destination = segue.destination.contents as? DocumentInfoViewController {
+                document?.thumbnail = emojiArtView.snapshot
+                destination.document = document
+            }
+        }
+    }
+    
+    
     // MARK: - Model
     
     var emojiArt: EmojiArt? {
@@ -79,7 +91,7 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFl
         if document?.emojiArt != nil {
             document?.thumbnail = emojiArtView.snapshot
         }
-        dismiss(animated: true) {
+        presentingViewController?.dismiss(animated: true) {
             self.document?.close { success in
                 // 문서 상태 옵저버 삭제
                 if let observer = self.documentObserver {
