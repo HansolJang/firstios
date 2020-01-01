@@ -172,11 +172,20 @@
                                 <action selector="close:" destination="0LX-sP-Ctr" id="ci9-U2-YAh"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Inspect" id="aSv-U6-GGE">
-                            <connections>
-                                <segue destination="j2R-Km-4bi" kind="presentation" identifier="Show Document Info" modalPresentationStyle="formSheet" id="Txp-Kd-9P7"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem title="pop" id="Fwd-sF-4hI">
+                                <connections>
+                                    <segue destination="j2R-Km-4bi" kind="popoverPresentation" identifier="Show Document Info" popoverAnchorBarButtonItem="Fwd-sF-4hI" id="cuG-GJ-NDh">
+                                        <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
+                                    </segue>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem title="Inspect" id="aSv-U6-GGE">
+                                <connections>
+                                    <segue destination="j2R-Km-4bi" kind="presentation" identifier="Show Document Info" modalPresentationStyle="formSheet" id="Txp-Kd-9P7"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="dropZone" destination="cag-b5-lTV" id="GQY-E0-JYq"/>
@@ -195,11 +204,11 @@
             <objects>
                 <viewController id="j2R-Km-4bi" customClass="DocumentInfoViewController" customModule="EmojiArt" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9iI-Z5-vdl">
-                        <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="xoM-pG-jwj">
-                                <rect key="frame" x="176" y="220.5" width="188.5" height="179"/>
+                                <rect key="frame" x="93.5" y="244" width="188.5" height="179"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="K6I-Zs-Mva">
                                         <rect key="frame" x="0.0" y="0.0" width="188.5" height="92"/>
@@ -266,9 +275,11 @@
                     </view>
                     <connections>
                         <outlet property="createdLabel" destination="PwE-Zj-ywb" id="yLM-4n-4kQ"/>
+                        <outlet property="returnToDocumentButton" destination="OSs-fP-ukU" id="3qF-0H-Wla"/>
                         <outlet property="sizeLabel" destination="bnG-mD-04a" id="fIl-QF-UHX"/>
                         <outlet property="thumbnailAspectRatio" destination="GjL-3d-ern" id="rBc-9W-hG8"/>
                         <outlet property="thumbnailImageView" destination="K6I-Zs-Mva" id="XqJ-8u-tHS"/>
+                        <outlet property="topLevelView" destination="xoM-pG-jwj" id="CGs-pp-t5R"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wnc-su-oE1" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -294,4 +305,7 @@
             <point key="canvasLocation" x="694" y="653"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="cuG-GJ-NDh"/>
+    </inferredMetricsTieBreakers>
 </document>

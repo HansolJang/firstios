@@ -47,14 +47,31 @@ class DocumentInfoViewController: UIViewController {
                                                       constant: 0)
             thumbnailImageView.addConstraint(thumbnailAspectRatio)
         }
+        
+        if presentationController is UIPopoverPresentationController {
+            thumbnailImageView?.isHidden = true
+            returnToDocumentButton?.isHidden = true
+            view.backgroundColor = .clear
+            
+        }
     }
 
     @IBAction func done() {
         presentingViewController?.dismiss(animated: true)
     }
     
+    // popover's content size
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if let fittedSize = topLevelView?.sizeThatFits(UIView.layoutFittingCompressedSize) {
+            preferredContentSize = CGSize(width: fittedSize.width  + 30, height: fittedSize.height + 30)
+        }
+    }
+    
+    @IBOutlet weak var topLevelView: UIStackView!
     @IBOutlet weak var thumbnailImageView: UIImageView!
     @IBOutlet weak var sizeLabel: UILabel!
     @IBOutlet weak var createdLabel: UILabel!
     @IBOutlet weak var thumbnailAspectRatio: NSLayoutConstraint!
+    @IBOutlet weak var returnToDocumentButton: UIButton!
 }

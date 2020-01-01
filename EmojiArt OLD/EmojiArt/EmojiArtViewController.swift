@@ -25,7 +25,7 @@ extension EmojiArt.EmojiInfo {
 }
 
 class EmojiArtViewController: UIViewController, UIDropInteractionDelegate, UIScrollViewDelegate,
-UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDragDelegate, UICollectionViewDropDelegate {
+UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDragDelegate, UICollectionViewDropDelegate, UIPopoverPresentationControllerDelegate {
     
     // MARK: - Navigation
     
@@ -34,8 +34,19 @@ UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFl
             if let destination = segue.destination.contents as? DocumentInfoViewController {
                 document?.thumbnail = emojiArtView.snapshot
                 destination.document = document
+                
+                if let ppc = destination.popoverPresentationController {
+                    ppc.delegate = self
+                }
             }
         }
+    }
+    
+    func adaptivePresentationStyle(
+        for controller: UIPresentationController,
+        traitCollection: UITraitCollection)
+        -> UIModalPresentationStyle {
+        return .none
     }
     
     
