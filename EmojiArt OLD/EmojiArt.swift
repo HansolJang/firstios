@@ -11,7 +11,8 @@ import Foundation
 // Codable 를 상속하여 Model -> Json File 한 후 UIDocument 에 저장
 struct EmojiArt: Codable {
     
-    var url: URL
+    var url: URL?
+    var image: Data?
     var emojis = [EmojiInfo]()
     
     struct EmojiInfo: Codable {
@@ -39,4 +40,10 @@ struct EmojiArt: Codable {
         self.url = url
         self.emojis = emojis
     }
+    
+    init(imageData: Data, emojis: [EmojiInfo]) {
+        self.image = imageData
+        self.emojis = emojis
+    }
+    
 }
